@@ -1,60 +1,54 @@
-const prisma = require("../generated/prisma/client");
+import { Request, Response } from "express";
+import { categoryService } from "../services/categoryService";
 
-exports.getAllCategories = async (req, res) => {
-  try {
-    const categories = await prisma.Category.findMany({
-      include: { category: true },
-    });
-    res.json(categories);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching categories", error });
-  }
-};
+export const categoryController = {
+  findAll: async (req: Request, res: Response) => {
+    try {
+      const categorys = await categoryService.findAll();
+      res.json(categorys);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  },
 
-exports.createCategory = async (req, res) => {
-  const { name, description, price, stock, categoryId, imageUrl } = req.body;
-  try {
-    const Category = await prisma.Category.create({
-      data: { name, description, price, stock, categoryId, imageUrl },
-    });
-    res.status(201).json(Category);
-  } catch (error) {
-    res.status(500).json({ message: "Error creating Category", error });
-  }
-};
+  findById: async (req: Request, res: Response) => {
+    try {
+      const id = req.params.id;
+      const category = await categoryService.findById(id);
+      if (!category)
+        return res.status(404).json({ error: "category not found" });
+      res.json(category);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  },
 
-exports.getCategoryById = async (req, res) => {
-  try {
-    const Category = await prisma.Category.findUnique({
-      where: { id: req.params.id },
-      include: { category: true },
-    });
-    if (!Category) return res.status(404).json({ message: "Not found" });
-    res.json(Category);
-  } catch (error) {
-    res.status(500).json({ error });
-  }
-};
+  create: async (req: Request, res: Response) => {
+    try {
+      const newcategory = await categoryService.create(req.body);
+      res.status(201).json(newcategory);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  },
 
-exports.updateCategory = async (req, res) => {
-  try {
-    const updated = await prisma.Category.update({
-      where: { id: req.params.id },
-      data: req.body,
-    });
-    res.json(updated);
-  } catch (error) {
-    res.status(500).json({ error });
-  }
-};
+  update: async (req: Request, res: Response) => {
+    try {
+      const id = req.params.id;
+      const updatedcategory = await categoryService.update(id, req.body);
+      res.json(updatedcategory);
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  },
 
-exports.deleteCategory = async (req, res) => {
-  try {
-    await prisma.Category.delete({
-      where: { id: req.params.id },
-    });
-    res.status(204).send();
-  } catch (error) {
-    res.status(500).json({ error });
-  }
+  delete: async (req: Request, res: Response) => {
+    try {
+      const id = req.params.id;
+      await categoryService.delete(id);
+      res.status(204).send();
+    } catch (err) {
+      res.status(400).json({ error: err.message });
+    }
+  },
 };

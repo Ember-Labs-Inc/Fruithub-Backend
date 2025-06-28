@@ -1,42 +1,48 @@
-const prisma = require('../prisma/client');
+import { Prisma } from "@prisma/client";
+import prisma from "../config/prisma";
 
-const getAllUsers = async () => {
-  return await prisma.user.findMany({
-    include: {
-      posts: true,
-      products: true,
-      orders: true,
-    },
-  });
-};
+export const userService = {
+  async findAll() {
+    return prisma.user.findMany({
+      include: {
+        posts: true,
+        products: true,
+        orders: true,
+      },
+    });
+  },
 
-const getUserById = async (id) => {
-  return await prisma.user.findUnique({
-    where: { id },
-    include: {
-      posts: true,
-      products: true,
-      orders: true,
-    },
-  });
-};
+  async findById(id: string) {
+    return prisma.user.findUnique({
+      where: { id },
+      include: {
+        posts: true,
+        products: true,
+        orders: true,
+      },
+    });
+  },
 
-const createUser = async (data) => {
-  return await prisma.user.create({ data });
-};
+  login: async (email: string, password: string) => {
+    return prisma.user.findUnique({
+      where: { email, password },
+      include: {
+        posts: true,
+        products: true,
+        orders: true,
+      },
+    });
+  },
 
-const updateUser = async (id, data) => {
-  return await prisma.user.update({ where: { id }, data });
-};
+  async create(data: Prisma.UserCreateInput) {
+    return prisma.user.create({ data });
+  },
 
-const deleteUser = async (id) => {
-  return await prisma.user.delete({ where: { id } });
-};
+  async update(id: string, data: Prisma.UserUpdateInput) {
+    return prisma.user.update({ where: { id }, data });
+  },
 
-module.exports = {
-  getAllUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser,
+  async delete(id: string) {
+    return prisma.user.delete({ where: { id } });
+  },
 };

@@ -1,11 +1,19 @@
-const express = require("express");
-const router = express.Router();
-const userController = require("../controllers/userController");
+import { Router } from "express";
+import { userController } from "../../../controllers/userController";
 
-router.get("/", userController.getAllUsers);
-router.post("/", userController.createUser);
-router.get("/:id", userController.getUserById);
-router.put("/:id", userController.updateUser);
-router.delete("/:id", userController.deleteUser);
+const router = Router();
 
-module.exports = router;
+function asyncHandler(fn: any) {
+  return (req: any, res: any, next: any) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
+}
+
+router.post("/", asyncHandler(userController.create));
+router.get("/", asyncHandler(userController.findAll));
+router.get("/:id", asyncHandler(userController.findById));
+router.put("/:id", asyncHandler(userController.update));
+router.delete("/:id", asyncHandler(userController.delete));
+router.post("/login", asyncHandler(userController.login));
+
+export default router;

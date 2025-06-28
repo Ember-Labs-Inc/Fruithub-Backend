@@ -1,38 +1,36 @@
-const getAllCategories = async () => {
-  return await prisma.category.findMany({
-    include: {
-      products: true,
-      posts: true,
-    },
-  });
-};
+import { Prisma } from "@prisma/client";
+import prisma from "../config/prisma";
 
-const getCategoryById = async (id) => {
-  return await prisma.category.findUnique({
-    where: { id },
-    include: {
-      products: true,
-      posts: true,
-    },
-  });
-};
+export const categoryService = {
+  async findAll() {
+    return prisma.category.findMany({
+      include: {
+        products: true,
+        posts: true,
+      },
+    });
+  },
 
-const createCategory = async (data) => {
-  return await prisma.category.create({ data });
-};
+  async findById(id: string) {
+    return prisma.category.findUnique({
+      where: { id },
+      include: {
+        products: true,
+        posts: true,
+      },
+    });
+  },
 
-const updateCategory = async (id, data) => {
-  return await prisma.category.update({ where: { id }, data });
-};
 
-const deleteCategory = async (id) => {
-  return await prisma.category.delete({ where: { id } });
-};
+  async create(data: Prisma.CategoryCreateInput) {
+    return prisma.category.create({ data });
+  },
 
-module.exports = {
-  getAllCategories,
-  getCategoryById,
-  createCategory,
-  updateCategory,
-  deleteCategory,
+  async update(id: string, data: Prisma.CategoryUpdateInput) {
+    return prisma.category.update({ where: { id }, data });
+  },
+
+  async delete(id: string) {
+    return prisma.category.delete({ where: { id } });
+  },
 };

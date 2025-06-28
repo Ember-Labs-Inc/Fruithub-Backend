@@ -1,38 +1,33 @@
-const getAllOrders = async () => {
-  return await prisma.order.findMany({
-    include: {
-      user: true,
-      items: true,
-    },
-  });
-};
+import { Prisma } from "@prisma/client";
+import prisma from "../config/prisma";
 
-const getOrderById = async (id) => {
-  return await prisma.order.findUnique({
-    where: { id },
-    include: {
-      user: true,
-      items: true,
-    },
-  });
-};
+export const orderService = {
+  async findAll() {
+    return prisma.order.findMany({
+      include: {
+        user: true,
+      },
+    });
+  },
 
-const createOrder = async (data) => {
-  return await prisma.order.create({ data });
-};
+  async findById(id: string) {
+    return prisma.order.findUnique({
+      where: { id },
+      include: {
+        user: true,
+      },
+    });
+  },
 
-const updateOrder = async (id, data) => {
-  return await prisma.order.update({ where: { id }, data });
-};
+  async create(data: Prisma.OrderCreateInput) {
+    return prisma.order.create({ data });
+  },
 
-const deleteOrder = async (id) => {
-  return await prisma.order.delete({ where: { id } });
-};
+  async update(id: string, data: Prisma.OrderUpdateInput) {
+    return prisma.order.update({ where: { id }, data });
+  },
 
-module.exports = {
-  getAllOrders,
-  getOrderById,
-  createOrder,
-  updateOrder,
-  deleteOrder,
+  async delete(id: string) {
+    return prisma.order.delete({ where: { id } });
+  },
 };

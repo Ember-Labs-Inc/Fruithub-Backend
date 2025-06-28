@@ -1,11 +1,18 @@
-const express = require("express");
-const router = express.Router();
-const productController = require("../controllers/productController");
+import { Router } from "express";
+import { productController } from "../../../controllers/productController";
 
-router.get("/", productController.getAllProducts);
-router.post("/", productController.createProduct);
-router.get("/:id", productController.getProductById);
-router.put("/:id", productController.updateProduct);
-router.delete("/:id", productController.deleteProduct);
+const router = Router();
 
-module.exports = router;
+function asyncHandler(fn: any) {
+  return (req: any, res: any, next: any) => {
+    Promise.resolve(fn(req, res, next)).catch(next);
+  };
+}
+
+router.post("/", asyncHandler(productController.create));
+router.get("/", asyncHandler(productController.findAll));
+router.get("/:id", asyncHandler(productController.findById));
+router.put("/:id", asyncHandler(productController.update));
+router.delete("/:id", asyncHandler(productController.delete));
+
+export default router;
