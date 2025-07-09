@@ -15,7 +15,7 @@
     "@aws-sdk/client-s3": "^3.787.0",
     "@googlemaps/google-maps-services-js": "^3.4.0",
     "@infobip-api/sdk": "^0.3.2",
-    "@prisma/client": "6.7.0",
+    "@prisma/client": "^6.11.1",
     "@redis/client": "^1.6.0",
     "@tailwindcss/cli": "^4.0.17",
     "africastalking": "^0.7.3",
@@ -88,7 +88,7 @@
     "autoprefixer": "^10.4.20",
     "connect-livereload": "^0.6.1",
     "livereload": "^0.9.3",
-    "prisma": "^6.7.0",
+    "prisma": "^6.11.1",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
   },

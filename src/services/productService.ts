@@ -1,5 +1,6 @@
 import { Prisma } from "@prisma/client";
 import prisma from "../config/prisma";
+import { ProductInput } from "types/productInput";
 
 export const productService = {
   async findAll() {
@@ -21,8 +22,24 @@ export const productService = {
     });
   },
 
-  async create(data: Prisma.ProductCreateInput) {
-    return prisma.product.create({ data });
+  async create(data: ProductInput) {
+    const {
+      categoryId,
+      createdById,
+      ...rest
+    } = data;
+
+    return prisma.product.create({
+      data: {
+        ...rest,
+        category: {
+          connect: { id: categoryId },
+        },
+        createdBy: {
+          connect: { id: createdById },
+        },
+      },
+    });
   },
 
   async update(id: string, data: Prisma.ProductUpdateInput) {

@@ -72,10 +72,17 @@ app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "views"));
 
 app.use(
-  express.static(path.join(__dirname, "../public"), {
-    maxAge: config.env != "development" ? "30d" : "0",
+  "/uploads",
+  express.static(path.join(__dirname, "../public/uploads"), {
+    maxAge: config.env !== "development" ? "30d" : "0",
+    setHeaders: (res) => {
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    },
   })
 );
+
+
 passport.use(localStrategy);
 passport.serializeUser((user: any, done) => {
   done(null, user.id as any);

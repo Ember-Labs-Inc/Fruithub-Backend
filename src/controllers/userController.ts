@@ -27,8 +27,10 @@ export const userController = {
     const user = await userService.login(email, password);
     if (user) {
       res.json(user);
+    } else if(!user) {
+      res.status(404).json({message: "Please create an account to proceed"})
     } else {
-      res.status(404).json({ message: "User not found" });
+      res.status(404).json({ message: "Invalid email or password" });
     }
   },
 

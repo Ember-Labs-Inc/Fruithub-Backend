@@ -25,9 +25,11 @@ export const categoryController = {
 
   create: async (req: Request, res: Response) => {
     try {
+      console.log("Create category payload:", req.body); // ✅
       const newcategory = await categoryService.create(req.body);
       res.status(201).json(newcategory);
     } catch (err) {
+      console.error("Create category error:", err); // ✅
       res.status(400).json({ error: err.message });
     }
   },
@@ -49,6 +51,15 @@ export const categoryController = {
       res.status(204).send();
     } catch (err) {
       res.status(400).json({ error: err.message });
+    }
+  },
+
+  getStats: async (req: Request, res: Response) => {
+    try {
+      const stats = await categoryService.getStats();
+      res.json(stats);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
     }
   },
 };
