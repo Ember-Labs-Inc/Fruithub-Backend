@@ -43,7 +43,7 @@ app.use(
     cookie: {
       secure: config.env != "development",
       httpOnly: true,
-      sameSite: "lax",
+      sameSite: "none",
     },
   })
 );
@@ -59,9 +59,23 @@ app.use(
 );
 app.use(xss());
 app.use(compression());
+
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  "https://fruithub-admin.netlify.app",
+  "http://localhost:5173",
+];
+
 app.use(
   cors({
-    credentials: true,
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true, // ✅ needed to send cookies / sessions
   })
 );
 app.options("*", cors());
@@ -81,7 +95,6 @@ app.use(
     },
   })
 );
-
 
 passport.use(localStrategy);
 passport.serializeUser((user: any, done) => {
