@@ -5,16 +5,16 @@ const SALT_ROUNDS = 10;
 
 export const seedAccounts = async () => {
   try {
-    const userCount = await prisma.user.count();
+    const adminCount = await prisma.admin.count();
 
-    if (userCount > 0) {
-      console.log("Users exist - skipping demo account creation");
+    if (adminCount > 0) {
+      console.log("Admins exist - skipping demo account creation");
       return;
     }
 
     const demoAccountsRaw = [
       {
-        name: "Super Admin",
+        name: "Albert Watbin",
         email: "albertwatbin@gmail.com",
         phone: "+256-7898-74647",
         gender: "MALE" as const,
@@ -31,7 +31,7 @@ export const seedAccounts = async () => {
     );
 
     await prisma.$transaction(
-      demoAccounts.map((account) => prisma.user.create({ data: account }))
+      demoAccounts.map((account) => prisma.admin.create({ data: account }))
     );
 
     console.log("Seed account created successfully");

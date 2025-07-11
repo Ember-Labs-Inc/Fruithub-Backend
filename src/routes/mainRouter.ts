@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { ServerReanderingRoutes } from "./server_reandering.routes";
+import adminRoutes from "./api/dashboard/adminRoutes";
 import userRoutes from "./api/dashboard/userRoutes";
 import postRoutes from "./api/dashboard/postRoutes";
 import productRoutes from "./api/dashboard/productRoutes";
@@ -14,6 +15,7 @@ app.use("/", ServerReanderingRoutes);
 app.use("/api/v1/upload", uploadRoute);
 
 
+app.use("/api/v1/admins", adminRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/posts", postRoutes);
 app.use("/api/v1/products", productRoutes);
